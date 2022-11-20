@@ -16,5 +16,3 @@ RUN apk update && \
     apk add --virtual build-dependencies --no-cache ${DEV_PACKAGES} && \
     bundle install -j4 && \
     apk del build-dependencies
-
-CMD [ "rails", "server", "-b", "0.0.0.0" ]
