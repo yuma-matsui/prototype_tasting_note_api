@@ -6,13 +6,14 @@ jobs:
       - image: cimg/ruby:3.1.2-node
         environment:
           RAILS_ENV: test
-          DB_HOST: 127.0.0.1
+          DB_HOST: 0.0.0.0
+
       - image: cimg/postgres:15.0
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_HOST_AUTH_METHOD: trust
-    
+
     working_directory: ~/repo
 
     steps:
@@ -24,11 +25,10 @@ jobs:
             - gem-cache-v1-
 
       - run:
-        command: |
-          gem install bundler
-          bundle config set path 'vendor/bundle'
-          bundle install --jobs=4 --retry=3
-        working_directory: api
+          command: |
+            gem install bundler
+            bundle config set path 'vendor/bundle'
+            bundle install --jobs=4 --retry=3
 
       - save_cache:
           key: gem-cache-v1-{{ checksum "Gemfile.lock" }}
@@ -38,32 +38,29 @@ jobs:
       - run:
           name: rubocop
           command: bundle exec rubocop
-          working_directory: api
-    
+          working_directory: ./
+
       - run:
           name: wait for building database
           command: |
             dockerize -wait \
-              tcp://${DB_HOST}:3306 -timeout 120s
-    
+              tcp://${DB_HOST}:5432 -timeout 120s
+
       - run:
           command: bundle exec rails db:create
-          working_directory: api
       - run:
           command: bundle exec rails db:migrate
-          working_directory: api
 
       - run:
           name: create directory to store test results
           command: mkdir /tmp/test-results
-          working_directory: api
 
       - run:
           name: RSpec
           command: |
             bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings) \
-              || (printf "==== RETRYING...\n\n\n"; bundle exec rspec --only-failures")
-          working_directory: api
+              || (printf "==== RETRYING...\n\n\n"; bundle exec rspec --only-failures)
+          working_directory: ./
 
       - store_test_results:
           path: /tmp/test-results

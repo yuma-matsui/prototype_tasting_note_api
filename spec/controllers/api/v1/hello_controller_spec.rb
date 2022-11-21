@@ -9,4 +9,11 @@ RSpec.describe Api::V1::HelloController, type: :controller do
       expect(response).to be_successful
     end
   end
+
+  describe 'hello' do
+    it 'never success' do
+      hello = 'hello'
+      expect(hello).to eq 'hello'
+    end
+  end
 end
