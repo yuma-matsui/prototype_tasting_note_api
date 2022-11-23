@@ -4,6 +4,6 @@ class Api::V1::TasksController < ApplicationController
   def index
     ['1st Task', '2nd Task', '3rd Task'].each { |title| Task.create!(title: title) } if Task.count.zero?
 
-    render json: { tasks: Task.all.to_json }
+    render json: Task.all
   end
 end
