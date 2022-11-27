@@ -11,15 +11,12 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - "./api/tmp/db:/var/lib/postgresql/data"
+      - "./tmp/db:/var/lib/postgresql/data"
 
   api:
     build:
       context: .
       dockerfile: Dockerfile.production
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
     volumes:
       - "./:/app"
     ports:
