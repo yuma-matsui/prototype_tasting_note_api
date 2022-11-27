@@ -5,6 +5,7 @@ executors:
     docker:
       - image: cimg/ruby:3.1.2-node
         environment:
+          DB_HOST: 0.0.0.0
           RAILS_ENV: test
       - image: cimg/postgres:15.0
         environment:
@@ -59,7 +60,7 @@ jobs:
           name: wait for building database
           command: |
             dockerize -wait \
-              tcp://0.0.0.0:5432 -timeout 120s
+              tcp://${DB_HOST}:5432 -timeout 120s
       - run:
           name: create directory to store test results
           command: mkdir /tmp/test-results
