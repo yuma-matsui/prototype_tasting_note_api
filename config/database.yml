@@ -86,5 +86,6 @@ test:
 production:
   <<: *default
   database: app_production
-  username: app
-  password: <%= ENV["APP_DATABASE_PASSWORD"] %>
+  username: postgres
+  password: <%= Rails.application.credentials.production.aws[:password] %>
+  url: <%= Rails.application.credentials.production.aws[:url] %>
