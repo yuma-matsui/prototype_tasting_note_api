@@ -85,7 +85,9 @@ test:
 #
 production:
   <<: *default
-  database: app_production
-  username: postgres
-  password: <%= Rails.application.credentials.production.aws[:password] %>
-  url: <%= Rails.application.credentials.production.aws[:url] %>
+  encoding: utf8
+  database: <%= Rails.application.credentials.production.aws.db[:name] || 'app_production'%>
+  username: <%= Rails.application.credentials.production.aws.db[:username] || 'postgres' %>
+  password: <%= Rails.application.credentials.production.aws.db[:password] || 'postgres' %>
+  host: <%= Rails.application.credentials.production.aws.db[:host] || 'postgres' %>
+  port: <%= Rails.application.credentials.production.aws.db[:port] || 5432 %>
