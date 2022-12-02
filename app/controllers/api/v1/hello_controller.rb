@@ -6,6 +6,6 @@ class Api::V1::HelloController < ApplicationController
   end
 
   def show
-    render json: 'hello'
+    render json: 'Hello'
   end
 end
